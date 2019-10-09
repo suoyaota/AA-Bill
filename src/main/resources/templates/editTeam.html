@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>管理队伍</title>
+</head>
+<body>
+<h2 th:text="'队名：' + ${team.teamName}">队名：当前队伍名</h2>
+<form action="updateTeam" method="post">
+    修改队伍名称:<input name="teamName" th:value="${team.teamName}"/>
+    <input name="id" type="hidden" th:value="${team.id}"/>
+    <button type="submit">提交</button>
+</form>
+
+<a href="/teamList">返回队伍列表</a><br>
+<div>
+    <table>
+        <tr><th>队内用户</th></tr><br>
+        <tr th:text="'队长：' + ${leader.name}"></tr><br>
+        <tr>队员：</tr>
+        <tr th:each="u: ${teamMembersWithoutLeader}">
+            <td th:text="${u.name}"></td>
+            <td><a th:href="@{/deleteTeamMember(memberID=${u.id})}">删除</a></td>
+        </tr>
+    </table>
+</div>
+
+<span>
+    <table>
+        <thead>
+        <tr>
+            <th>可选择加入的用户</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="ur: ${userReadyList}">
+            <td th:text="${ur.name}"></td>
+            <td><a th:href="@{/addToTeam(id=${ur.id})}">加入团队</a></td>
+        </tr>
+        </tbody>
+    </table>
+</span>
+<br>
+
+<h2>队内账单</h2>
+<p>新建账单</p>
+<form action="addBill">
+    新账单名：<input type="text" name="billName">
+    <input type="submit" value="提交">
+</form>
+
+<div>
+    <table>
+        <thead>
+        <tr>
+            <th>账单名</th>
+            <th>总金额</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="b: ${billsInTeam}">
+            <td th:text="${b.billName}"></td>
+            <td th:text="${b.totalMoney}"></td>
+            <td><a th:href="@{/editBill(billID=${b.id})}">查看详细</a></td>
+            <td><a th:href="@{/deleteBill(billID=${b.id})}">删除</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

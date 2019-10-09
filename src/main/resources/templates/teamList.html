@@ -1,0 +1,33 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<p th:text="'欢迎您, ' + ${name} + '!' + '  您的ID：' + ${userID}">欢迎您，当前用户！</p><a href="/">返回登录</a><br>
+<h4>创建新的团队:</h4>
+<form action="newTeamSubmit" method="post">
+    团队名称：<input type="text" name="teamName">
+    <input type="submit" value="提交">
+</form><br>
+<h4>我管理的团队：</h4><br>
+<div>
+    <table>
+        <thead>
+        <tr>
+            <th>队伍名称</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="t:${tl}">
+            <td th:text="${t.teamName}"></td>
+            <td><a th:href="@{/editTeam(teamID=${t.id})}">管理</a></td>
+            <td><a th:href="@{/deleteTeam(teamID=${t.id})}">删除</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

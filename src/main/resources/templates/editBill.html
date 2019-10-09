@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>编辑账单</title>
+</head>
+<body>
+
+<h2 th:text="'账单名:' + ${bill.billName}">当前账单名</h2>
+<form action="backToTeam"><button type = "submit">返回队内详情</button></form>
+<form action="updateBillName" method="post">
+    修改账单名称:<input name="billName" th:value="${bill.billName}"/>
+    <input name="id" type="hidden" th:value="${bill.id}"/>
+    <button type="submit">提交</button>
+</form>
+
+<form action="updateBillTotalMoney" method="post">
+    修改总金额：<input name="totalMoney" th:value="${bill.totalMoney}"/>
+    <input name="id" type="hidden" th:value="${bill.id}"/>
+    <button type="submit">修改</button>
+</form>
+
+<h3>账单详细：</h3><br>
+<p th:text="'总人数' + ${billMemberNum} + ';   ' + '总金额:' + ${bill.totalMoney} + '元'">总人数:总金额:</p>
+
+<div>
+    <table>
+        <tr></tr><br>
+        <tr th:text="'账单内用户(队长：' + ${leaderName}+')'"></tr><br>
+        <tr>
+            <th>需支付成员</th>
+            <th>分摊比例</th>
+            <th>应付金额（元）</th>
+            <th>修改分摊比例</th>
+        </tr><br>
+        <tr th:each="bd: ${billMembers}">
+            <td th:text="${bd.memberName}"></td>
+            <td th:text="${bd.ratio}"></td>
+            <td th:text="${#numbers.setFormatDecimal(bd.ratio*bill.totalMoney,1,2)}"></td>
+            <td>
+                <form action="updateRatio" method="post">
+                    <input name="ratio" th:value="${bd.ratio}"/>
+                    <input name="billID" type="hidden" th:value="${bill.id}"/>
+                    <input name="memberID" type="hidden" th:value="${bd.memberID}"/>
+                    <button type="submit">修改</button>
+                </form>
+            </td>
+            <td><a th:href="@{/deleteBillMember(memberID=${bd.memberID})}" th:if="${leaderID}!=${bd.memberID}">删除</a></td>
+        </tr>
+        <tr th:text="'剩余可分配比例：'+${#numbers.setFormatDecimal(ratioRemained,1,4)}"></tr>
+    </table>
+</div>
+
+<span>
+    <table>
+        <thead>
+        <tr>
+            <th>可选择加入的用户(队内成员）</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="tmr: ${teamMembersReady}">
+            <td th:text="${tmr.name}"></td>
+            <td><a th:href="@{/addToBill(id=${tmr.id})}">加入账单</a></td>
+        </tr>
+        </tbody>
+    </table>
+</span>
+<br>
+
+
+<!--<p><a th:href="@{/editTeam(id=${t.id})}">修改分摊比例</a></p>-->
+</body>
+</html>
